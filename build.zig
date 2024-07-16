@@ -4,6 +4,12 @@ pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
+    const translate_c = b.addTranslateC(.{
+        .root_source_file = b.path("src/c.h"),
+        .target = target,
+        .optimize = optimize,
+        .link_libc = true,
+    });
     const exe = b.addExecutable(.{
         .name = "tetris",
         .root_module = b.createModule(.{
@@ -11,9 +17,14 @@ pub fn build(b: *std.Build) void {
             .optimize = optimize,
             .target = target,
             .link_libc = true,
+            .imports = &.{
+                .{
+                    .name = "c",
+                    .module = translate_c.createModule(),
+                },
+            },
         }),
     });
-
     exe.root_module.linkSystemLibrary("glfw", .{});
     exe.root_module.linkSystemLibrary("epoxy", .{});
     b.installArtifact(exe);
