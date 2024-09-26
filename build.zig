@@ -10,23 +10,26 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
         .link_libc = true,
     });
+
+    const c_module = translate_c.createModule();
+    c_module.linkSystemLibrary("glfw", .{});
+    c_module.linkSystemLibrary("epoxy", .{});
+
     const exe = b.addExecutable(.{
         .name = "tetris",
         .root_module = b.createModule(.{
             .root_source_file = b.path("src/main.zig"),
             .optimize = optimize,
             .target = target,
-            .link_libc = true,
             .imports = &.{
                 .{
                     .name = "c",
-                    .module = translate_c.createModule(),
+                    .module = c_module,
                 },
             },
         }),
     });
-    exe.root_module.linkSystemLibrary("glfw", .{});
-    exe.root_module.linkSystemLibrary("epoxy", .{});
+
     b.installArtifact(exe);
 
     const play = b.step("play", "Play the game");
