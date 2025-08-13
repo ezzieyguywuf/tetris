@@ -21,7 +21,7 @@ var all_shaders: AllShaders = undefined;
 var static_geometry: StaticGeometry = undefined;
 var font: Spritesheet = undefined;
 
-fn errorCallback(err: c_int, description: [*c]const u8) callconv(.C) void {
+fn errorCallback(err: c_int, description: [*c]const u8) callconv(.c) void {
     _ = err;
     _ = c.printf("Error: %s\n", description);
     c.abort();
@@ -33,7 +33,7 @@ fn keyCallback(
     scancode: c_int,
     action: c_int,
     mods: c_int,
-) callconv(.C) void {
+) callconv(.c) void {
     _ = mods;
     _ = scancode;
     const t: *Tetris = @ptrCast(@alignCast(c.glfwGetWindowUserPointer(win).?));
