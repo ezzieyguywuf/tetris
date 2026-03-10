@@ -10,12 +10,12 @@ pub fn build(b: *std.Build) void {
             .root_source_file = b.path("src/main.zig"),
             .optimize = optimize,
             .target = target,
+            .link_libc = true,
         }),
     });
 
-    exe.linkLibC();
-    exe.linkSystemLibrary("glfw");
-    exe.linkSystemLibrary("epoxy");
+    exe.root_module.linkSystemLibrary("glfw", .{});
+    exe.root_module.linkSystemLibrary("epoxy", .{});
     b.installArtifact(exe);
 
     const play = b.step("play", "Play the game");
