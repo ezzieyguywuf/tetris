@@ -8,12 +8,9 @@ pub fn build(b: *std.Build) void {
         .root_source_file = b.path("src/c.h"),
         .target = target,
         .optimize = optimize,
-        .link_libc = true,
     });
-
-    const c_module = translate_c.createModule();
-    c_module.linkSystemLibrary("glfw", .{});
-    c_module.linkSystemLibrary("epoxy", .{});
+    translate_c.linkSystemLibrary("glfw", .{});
+    translate_c.linkSystemLibrary("epoxy", .{});
 
     const exe = b.addExecutable(.{
         .name = "tetris",
@@ -24,7 +21,7 @@ pub fn build(b: *std.Build) void {
             .imports = &.{
                 .{
                     .name = "c",
-                    .module = c_module,
+                    .module = translate_c.createModule(),
                 },
             },
         }),
