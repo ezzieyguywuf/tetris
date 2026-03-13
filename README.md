@@ -18,7 +18,7 @@ A simple tetris clone written in
 
 ## Dependencies
 
- * [Zig compiler](https://github.com/andrewrk/zig) - use the debug build.
+ * [Zig](https://ziglang.org/)
  * [libepoxy](https://github.com/anholt/libepoxy)
  * [GLFW](http://www.glfw.org/)
 
