@@ -407,10 +407,10 @@ pub const Tetris = struct {
         t.hold_was_set = false;
         t.hold_piece = null;
 
-        t.piece_pool = [_]i32{1} ** pieces.pieces.len;
+        t.piece_pool = @splat(1);
 
         clearParticles(t);
-        t.grid = empty_grid;
+        t.grid = @splat(@splat(.Empty));
 
         populateNextPiece(t);
         dropNextPiece(t);
@@ -512,7 +512,7 @@ pub const Tetris = struct {
             t.grid[y] = t.grid[y - 1];
             y -= 1;
         }
-        t.grid[y] = empty_row;
+        t.grid[y] = @splat(.Empty);
     }
 
     fn cellEmpty(t: *Tetris, x: i32, y: i32) bool {
@@ -798,9 +798,6 @@ pub const Tetris = struct {
 
     const gravity = 1000.0;
     const time_per_level = 60.0;
-
-    const empty_row = [_]Cell{Cell{ .Empty = {} }} ** grid_width;
-    const empty_grid = [_][grid_width]Cell{empty_row} ** grid_height;
 };
 
 fn randBoolean() bool {
