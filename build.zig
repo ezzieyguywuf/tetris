@@ -5,15 +5,13 @@ pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
-    const translate_c = b.dependency("translate_c", .{});
-
-    const translator: Translator = .init(translate_c, .{
-        .c_source_file = b.path("src/c.h"),
+    const translate_c = b.addTranslateC(.{
+        .root_source_file = b.path("src/c.h"),
         .target = target,
         .optimize = optimize,
     });
-    translator.linkSystemLibrary("glfw3", .{});
-    translator.linkSystemLibrary("epoxy", .{});
+    translate_c.linkSystemLibrary("glfw3", .{});
+    translate_c.linkSystemLibrary("epoxy", .{});
 
     const exe = b.addExecutable(.{
         .name = "tetris",
@@ -24,7 +22,7 @@ pub fn build(b: *std.Build) void {
             .imports = &.{
                 .{
                     .name = "c",
-                    .module = translator.mod,
+                    .module = translate_c.createModule(),
                 },
             },
         }),
